@@ -45,7 +45,7 @@ def size_in_print_format_with_color(size):
             ns = str(size//unit[0]) + '.' + str(math.ceil(10*(size%unit[0])/unit[0]))
 
             if u == 'GB':
-                return bcolors.FAIL + ns + ' ' + unit[1] + bcolors.ENDC
+                return bcolors.HEADER + ns + ' ' + unit[1] + bcolors.ENDC
             elif u == 'MB':
                 number = float(ns)
                 if number >= 100.0:
