@@ -54,6 +54,13 @@ def play_video(video_filename, start_time=0.0, run_time='All'):
     print(unquote(Media.get_mrl()).split('/')[-1])
     print('')
 
+    if video_filename == '美秀集團－戀人.mp3':
+        player.audio_set_volume(398)
+        time.sleep(0.5)
+        print('Hey')
+    else:
+        player.audio_set_volume(100)
+
     #volume = player.audio_get_volume()
     #print(volume)
 
@@ -102,13 +109,17 @@ def play_video(video_filename, start_time=0.0, run_time='All'):
                 player.stop()
                 return 'n'
 
+            elif key == 'b':
+                player.stop()
+                return 'b'
+
             elif key == 'q':
                 player.stop()
                 return 'q'
         else:
-            #if str(player.get_state()) == 'State.Ended':
-                #player.stop()
-                #return
+            if str(player.get_state()) == 'State.Ended':
+                player.stop()
+                return
             time.sleep(0.5)
 
 
@@ -139,13 +150,43 @@ video_file_ext = ['3gp', 'asf', 'avi', 'flv', 'mkv', 'mp4', 'ogg', 'ogm', 'wav',
             'qdm2', 'qdmc', 'speex', 'tta', 'wma', 'webm']
 
 for r, ds, fs in os.walk('.'):
-    for f in fs:
+    i = 0
+    fnum = len(fs)
+    mode = 'forward'
+    while 0 <= i < fnum:
+        f = fs[i]
+
         if f.split('.')[-1].lower() not in video_file_ext:
+            if mode == 'forward':
+                i = (i+1) % fnum
+            else:
+                i = (i-1) % fnum
             continue
     
         r = play_video(f, start_time, run_time)
 
         if r == 'n':
+            i = (i+1) % fnum
+            mode = 'forward'
+            if i == 0:
+                print('\n')
+                c = input('The playlist has been back to the first one, are you sure to keep playing? (N/y) ==>')
+                c = c.lower()
+                if not c.startswith('y'):
+                    break
+
+            continue
+
+        if r == 'b':
+            i = (i-1) % fnum
+            mode = 'backward'
+            if i == 0:
+                print('\n')
+                c = input('The playlist has been back to the first one, are you sure to keep playing? (N/y) ==>')
+                c = c.lower()
+                if not c.startswith('y'):
+                    break
+
             continue
 
         if r == 'q':
