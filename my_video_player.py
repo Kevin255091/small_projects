@@ -54,7 +54,12 @@ def play_video(video_filename, start_time=0.0, run_time='All'):
     print(unquote(Media.get_mrl()).split('/')[-1])
     print('')
 
-    player.audio_set_volume(100)
+    if video_filename == 'small_sound.mp3':
+        player.audio_set_volume(398)
+        time.sleep(0.5)
+        print('Hey')
+    else:
+        player.audio_set_volume(100)
 
     #volume = player.audio_get_volume()
     #print(volume)
@@ -188,4 +193,5 @@ for r, ds, fs in os.walk('.'):
             break
 
     break
+
 
