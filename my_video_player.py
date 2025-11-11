@@ -54,12 +54,7 @@ def play_video(video_filename, start_time=0.0, run_time='All'):
     print(unquote(Media.get_mrl()).split('/')[-1])
     print('')
 
-    if video_filename == '美秀集團－戀人.mp3':
-        player.audio_set_volume(398)
-        time.sleep(0.5)
-        print('Hey')
-    else:
-        player.audio_set_volume(100)
+    player.audio_set_volume(100)
 
     #volume = player.audio_get_volume()
     #print(volume)
@@ -193,3 +188,4 @@ for r, ds, fs in os.walk('.'):
             break
 
     break
+
