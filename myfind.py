@@ -5,7 +5,8 @@ from pygame import mixer
 import re
 from tkinter import *
 from tkinter import messagebox
-from tkinter import filedialog
+from tkinter import filedialog    
+
 
 def search_directory_or_not(directory):
     global ignore_directories
@@ -75,7 +76,10 @@ def search(recursive=False):
 
             fname = os.path.join(rt, name)
             try:
-                f = open(fname, 'r', encoding='utf-8')
+                #f = open(fname, 'r', encoding=detect_file_encoding(fname)) #Too slow, not accurate
+                f = open(fname, 'r', encoding='utf-8') 
+                f2 = open(fname, 'r', encoding='cp950') 
+
             except IOError:
                 messagebox.showinfo('提示', '無法開啟檔案 ' + fname)
                 break
@@ -95,9 +99,31 @@ def search(recursive=False):
                         text_widget.insert(INSERT, strip_outrange_char(fname) + ' : ' + str(line_number) + '\n')
                         text_widget.insert(INSERT, strip_outrange_char(no_newline) + '\n\n')
             except Exception as e:
-                text_widget.insert(INSERT, 'Exception occured at line ' + str(line_number) + '!\n')
-                text_widget.insert(INSERT, 'In file ' + fname + ',\n' + str(e) +'\n')
+                #text_widget.insert(INSERT, 'Exception occured at line ' + str(line_number) + '!\n')
+                #text_widget.insert(INSERT, 'In file ' + fname + ',\n' + str(e) +'\n')
+                #text_widget.insert(INSERT, 'Try again' + '!\n')
+                print('Try again!')
+
+                try:
+                    for line in f2:
+                        line_number += 1
+                        no_newline = line.strip().rstrip('\r\n')
+                        text_line = no_newline.lower()
+                        keyword_count = 0
+                        for keyword in search_keywords:
+                            if keyword in text_line:
+                                keyword_count += 1
+                        if keyword_count == keyword_num:
+                            match_count += 1
+                            text_widget.insert(INSERT, strip_outrange_char(fname) + ' : ' + str(line_number) + '\n')
+                            text_widget.insert(INSERT, strip_outrange_char(no_newline) + '\n\n')
+
+                except Exception as e:
+                    text_widget.insert(INSERT, 'Exception occured at line ' + str(line_number) + '!\n')
+                    text_widget.insert(INSERT, 'In file ' + fname + ',\n' + str(e) +'\n')
+
             f.close()
+            f2.close()
 
         if recursive == False:
             break
